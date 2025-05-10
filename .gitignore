@@ -1,0 +1,41 @@
+# Entorno virtual
+venv/
+.env
+*.env
+
+# Compilación / caché Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Config VS Code
+.vscode/
+
+# Archivos temporales
+*.log
+*.sqlite3
+*.db
+
+# Frontend (Node)
+node_modules/
+dist/
+build/
+
+# IDEs
+.idea/
+.DS_Store
+
+# Producción
+*.pem
+*.key
+*.crt
+
+# PyInstaller
+*.spec
+
+# Docker
+*.pid
+
+# Otros
+coverage/
+htmlcov/

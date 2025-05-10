@@ -1,0 +1,1 @@
+# Archivo: schemas/sale.py

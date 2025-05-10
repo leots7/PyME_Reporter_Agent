@@ -1,0 +1,1 @@
+# Archivo: models/product.py

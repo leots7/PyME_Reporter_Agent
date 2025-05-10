@@ -1,0 +1,1 @@
+// Componente React: index.tsx
