@@ -7,6 +7,7 @@ from backend.app.db.base import Base
 from backend.auth.router import router as auth_router
 import logging
 from dotenv import load_dotenv
+from sqlalchemy import text # Importa text
 
 load_dotenv()
 
@@ -50,7 +51,7 @@ async def root():
 async def healthcheck(db: AsyncSession = Depends(get_db)):
     try:
         # Prueba conexión a DB
-        await db.execute("SELECT 1")
+        await db.execute(text("SELECT 1"))  # Usa text()
         return {
             "status": "healthy",
             "database": "connected",
