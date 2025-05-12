@@ -1,10 +1,14 @@
 # backend/main.py
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from database.connection import get_db, Base, engine
-from auth.router import router as auth_router
-import asyncio
+from sqlalchemy.ext.asyncio import AsyncSession
+from backend.app.db.session import get_async_session as get_db, engine
+from backend.app.db.base import Base
+from backend.auth.router import router as auth_router
 import logging
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configuración de logging
 logging.basicConfig(level=logging.INFO)
@@ -31,9 +35,12 @@ app.include_router(auth_router, prefix="/api/v1")
 @app.on_event("startup")
 async def startup_db():
     logger.info("Creando tablas de la base de datos...")
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    logger.info("✅ Tablas creadas correctamente")
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("✅ Tablas creadas correctamente")
+    except Exception as e:
+        logger.error(f"Error al crear las tablas: {e}")
 
 @app.get("/")
 async def root():
