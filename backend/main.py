@@ -1,4 +1,3 @@
-# backend/main.py
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,7 +6,7 @@ from backend.app.db.base import Base
 from backend.auth.router import router as auth_router
 import logging
 from dotenv import load_dotenv
-from sqlalchemy import text # Importa text
+from database.exceptions import DatabaseError
 
 load_dotenv()
 
@@ -42,6 +41,7 @@ async def startup_db():
         logger.info("✅ Tablas creadas correctamente")
     except Exception as e:
         logger.error(f"Error al crear las tablas: {e}")
+        raise DatabaseError(detail="Error al crear las tablas")
 
 @app.get("/")
 async def root():
@@ -51,12 +51,16 @@ async def root():
 async def healthcheck(db: AsyncSession = Depends(get_db)):
     try:
         # Prueba conexión a DB
-        await db.execute(text("SELECT 1"))  # Usa text()
+        await db.execute("SELECT 1")  # No es necesario usar 'text'
         return {
             "status": "healthy",
             "database": "connected",
             "services": ["auth", "reports"]
         }
-    except Exception as e:
+    except DatabaseError as e:
         logger.error(f"Healthcheck failed: {str(e)}")
-        raise HTTPException(status_code=500, detail="Database connection error")
+        raise DatabaseError(detail="Database connection error")
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Unexpected error occurred")
+
