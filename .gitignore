@@ -55,3 +55,4 @@ alembic/versions/
 # Otros
 coverage/
 htmlcov/
+database/sync/google/service_account.json
