@@ -178,6 +178,3 @@ class DriveHandler:
 
 # Instancia para uso directo
 drive_handler = DriveHandler()
-
-
-
