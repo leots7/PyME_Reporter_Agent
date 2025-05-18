@@ -2,11 +2,11 @@ PyME Reporter Agent
 
 Descripción:
 PyME Reporter Agent es una API diseñada para la generación automatizada de reportes financieros para pequeñas y medianas empresas (PyMEs). 
-Utiliza inteligencia artificial y sincronización de datos desde Google Sheets para proporcionar análisis y recomendaciones estratégicas.
+Utiliza inteligencia artificial y sincronización de datos desde Google Sheets, Dropbox y postgreSQL para proporcionar análisis y recomendaciones estratégicas.
 
 Características:
 - Autenticación segura con FastAPI
-- Sincronización de datos financieros desde Google Sheets
+- Sincronización de datos financieros desde Google Sheets y Dropbox
 - Generación de reportes personalizados en formato PDF
 - Monitorización del estado del sistema con /healthcheck
 - Integración con PostgreSQL utilizando SQLAlchemy
@@ -29,4 +29,11 @@ Uso:
   http://127.0.0.1:8000/healthcheck
 - Sincronizar datos desde Google Sheets:
   http://127.0.0.1:8000/sync-google-sheets/{spreadsheet_key}
+- Sincronizar archivos desde Dropbox:
+  http://127.0.0.1:8000/sync-dropbox/{folder_path}
+
+Contribución:
+Si deseas mejorar el proyecto, puedes hacer un fork, agregar tus cambios y enviar un pull request.
+Las mejoras en integración de APIs y optimización de procesamiento de datos siempre son bienvenidas.
+
 
