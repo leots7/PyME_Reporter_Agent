@@ -30,6 +30,3 @@ Uso:
 - Sincronizar datos desde Google Sheets:
   http://127.0.0.1:8000/sync-google-sheets/{spreadsheet_key}
 
-Contribución:
-Si deseas mejorar el proyecto, puedes hacer un fork, agregar tus cambios y enviar un pull request.
-Las mejoras en integración de APIs y optimización de procesamiento de datos siempre son bienvenidas.
