@@ -1,17 +1,38 @@
-"""
-Script para verificar permisos y acceso a servicios externos.
-"""
+"""Script para verificar permisos y acceso a servicios externos."""
 import sys
 import os
 import json
 from typing import Dict, Any
 
-# Añadir directorio raíz al path para importaciones
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+# Determinar la ruta base del proyecto de manera más robusta
+# Esto ayuda a que funcione tanto en VS Code como en terminal
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(script_dir, '../..'))
 
-from database.sync.google.google_client import get_google_client
-from database.sync.dropbox.dropbox_client import get_dropbox_client
-from database.config import validate_config, GOOGLE_API_CONFIG, get_service_account_path
+print(f"=== Información de ejecución ===")
+print(f"Directorio del script: {script_dir}")
+print(f"Directorio raíz del proyecto: {project_root}")
+print(f"Directorio de trabajo actual: {os.getcwd()}")
+print("=== sys.path ===")
+for path in sys.path:
+    print(path)
+print("=================")
+
+# Asegurarse de que el directorio raíz esté en el path
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+    print(f"Añadido {project_root} al sys.path")
+
+# Intentar importar los módulos necesarios
+try:
+    from database.sync.google.google_client import get_google_client
+    from database.sync.dropbox.dropbox_client import get_dropbox_client
+    from database.config import validate_config, GOOGLE_API_CONFIG, get_service_account_path
+    print("✅ Importaciones exitosas")
+except ImportError as e:
+    print(f"❌ Error de importación: {e}")
+    print("Asegúrate de que estás ejecutando desde el directorio correcto o que las rutas son correctas")
+    sys.exit(1)
 
 def check_google_permissions() -> Dict[str, Any]:
     """
@@ -53,7 +74,7 @@ def check_google_permissions() -> Dict[str, Any]:
                     results["service_account_file"]["client_email"] = sa_data.get("client_email")
         except Exception as e:
             results["service_account_file"]["error"] = str(e)
-    
+
     # Verificar conexión
     try:
         client = get_google_client()
@@ -83,13 +104,13 @@ def check_google_permissions() -> Dict[str, Any]:
             results["drive_access"]["status"] = "success"
             results["drive_access"]["file_count"] = len(files)
             results["drive_access"]["files"] = [
-                {"id": f.get('id'), "name": f.get('name'), "type": f.get('mimeType')} 
-                for f in files[:5]  # Mostrar solo los primeros 5 archivos
+                {"id": f.get('id'), "name": f.get('name'), "type": f.get('mimeType')}
+                 for f in files[:5]  # Mostrar solo los primeros 5 archivos
             ]
         except Exception as e:
             results["drive_access"]["status"] = "error"
             results["drive_access"]["message"] = str(e)
-            
+        
     except Exception as e:
         results["connection"]["status"] = "error"
         results["connection"]["message"] = str(e)
@@ -159,7 +180,7 @@ def main():
             print("   El archivo no existe")
         elif not sa_info["valid"]:
             print("   El archivo no es válido o está incompleto")
-    
+
     # Mostrar resultados de conexión
     conn_info = google_results["connection"]
     if conn_info["status"] == "success":
